@@ -21,8 +21,12 @@ import javax.swing.JSplitPane;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.FlowLayout;
+import java.awt.Graphics2D;
+
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
+
+import io.github.enzankiars.botbattle.bot.Bot;
 
 public class MainWindow {
 
@@ -114,6 +118,7 @@ public class MainWindow {
 		JMenuItem mntmQuit = new JMenuItem("Quit");
 		mnFile.add(mntmQuit);
 		
+		((Graphics2D)canvas.getGraphics()).drawImage(new Bot().getFullImage(), 100, 100, null);
 		
 	}
 }
