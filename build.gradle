@@ -1,0 +1,18 @@
+apply plugin: 'java'
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+apply plugin: 'jdepend'
+apply plugin: 'pmd'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+eclipse.classpath.downloadJavadoc = true
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'ch.qos.logback:logback-classic:1.1.3'
+    testCompile 'junit:junit:4.12'
+}
