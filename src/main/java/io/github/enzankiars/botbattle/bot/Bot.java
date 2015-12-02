@@ -73,12 +73,18 @@ public class Bot {
 	
 	public void drawFullImage(Graphics g, int x, int y, double rotate) {
 		double rotationRequired = Math.toRadians(rotate);
-		double locationX = bodyImage.getWidth() / 2;
-		double locationY = bodyImage.getHeight() / 2;
-		AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
-		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+		double locationBodyX = bodyImage.getWidth() / 2;
+		double locationBodyY = bodyImage.getHeight() / 2;
+		AffineTransform txBody = AffineTransform.getRotateInstance(rotationRequired, locationBodyX, locationBodyY);
+		AffineTransformOp opBody = new AffineTransformOp(txBody, AffineTransformOp.TYPE_BILINEAR);
+		
+		double locationGunX = gunImage.getWidth() / 2;
+		double locationGunY = gunImage.getHeight() / 2;
+		AffineTransform txGun = AffineTransform.getRotateInstance(rotationRequired, locationGunX, locationGunY);
+		AffineTransformOp opGun = new AffineTransformOp(txGun, AffineTransformOp.TYPE_BILINEAR);
 
 		// Drawing the rotated image at the required drawing locations
-		g.drawImage(op.filter(bodyImage, null), x, y, null);
+		g.drawImage(opBody.filter(bodyImage, null), x, y, null);
+		g.drawImage(opGun.filter(gunImage, null), x, y, null);
 	}
 }
