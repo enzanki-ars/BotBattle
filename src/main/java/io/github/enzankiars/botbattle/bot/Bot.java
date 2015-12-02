@@ -2,11 +2,14 @@ package io.github.enzankiars.botbattle.bot;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+
+import io.github.enzankiars.botbattle.util.TintImage;
 
 public class Bot {
 
@@ -15,16 +18,20 @@ public class Bot {
 	private BufferedImage bodyImage;
 	private BufferedImage gunImage;
 
-	public Bot() {
-		bodyColor = Color.BLUE;
-		gunColor = Color.BLUE;
+	public Bot(Color body, Color gun) {
+		bodyColor = body;
+		gunColor = gun;
 		try {
 			bodyImage = ImageIO.read(getClass().getClassLoader().getResource("body.png"));
+			BufferedImage maskBody = TintImage.generateMask(bodyImage, body, 0.5f);
+			bodyImage = TintImage.tint(bodyImage, maskBody);
+			
 			gunImage = ImageIO.read(getClass().getClassLoader().getResource("gun.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			BufferedImage maskGun = TintImage.generateMask(gunImage, gun, 0.5f);
+			gunImage = TintImage.tint(gunImage, maskGun);
+        } catch (IOException exp) {
+            exp.printStackTrace();
+        }
 	}
 
 	public Color getBodyColor() {
@@ -59,18 +66,19 @@ public class Bot {
 		this.gunImage = gunImage;
 	}
 	
-	public BufferedImage getFullImage() {
-		// create the new image, canvas size is the max. of both image sizes
-		int w = Math.max(bodyImage.getWidth(), gunImage.getWidth());
-		int h = Math.max(bodyImage.getHeight(), gunImage.getHeight());
-		BufferedImage combined = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	public void drawFullImage(Graphics g, int x, int y) {
+		g.drawImage(bodyImage, x, y, null);
+		g.drawImage(gunImage, x, y, null);
+	}
+	
+	public void drawFullImage(Graphics g, int x, int y, double rotate) {
+		double rotationRequired = Math.toRadians(rotate);
+		double locationX = bodyImage.getWidth() / 2;
+		double locationY = bodyImage.getHeight() / 2;
+		AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
+		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 
-		// paint both images, preserving the alpha channels
-		Graphics g = combined.getGraphics();
-		g.drawImage(bodyImage, 0, 0, null);
-		g.drawImage(gunImage, 0, 0, null);
-
-		// Save as new image
-		ImageIO.write(combined, "PNG", new File(path, "combined.png"));
+		// Drawing the rotated image at the required drawing locations
+		g.drawImage(op.filter(bodyImage, null), x, y, null);
 	}
 }

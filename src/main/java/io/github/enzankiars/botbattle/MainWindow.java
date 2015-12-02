@@ -10,27 +10,19 @@ import javax.swing.JMenuItem;
 import java.awt.Panel;
 import javax.swing.JButton;
 import java.awt.Color;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import javax.swing.BoxLayout;
 import java.awt.GridLayout;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JSplitPane;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import java.awt.FlowLayout;
-import java.awt.Graphics2D;
-
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
-
 import io.github.enzankiars.botbattle.bot.Bot;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MainWindow {
 
 	private JFrame frmBotbattle;
+	Canvas canvas;
 
 	/**
 	 * Launch the application.
@@ -44,6 +36,7 @@ public class MainWindow {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				
 			}
 		});
 	}
@@ -65,7 +58,7 @@ public class MainWindow {
 		frmBotbattle.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmBotbattle.getContentPane().setLayout(new BorderLayout(0, 0));
 		
-		Canvas canvas = new Canvas();
+		canvas = new Canvas();
 		canvas.setBackground(new Color(85, 107, 47));
 		frmBotbattle.getContentPane().add(canvas, BorderLayout.CENTER);
 		
@@ -74,6 +67,11 @@ public class MainWindow {
 		sidePanel.setLayout(new GridLayout(16, 0, 0, 0));
 		
 		JButton btnTest = new JButton("Test");
+		btnTest.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new Bot(Color.BLUE, Color.CYAN).drawFullImage(canvas.getGraphics(), 100, 100);
+			}
+		});
 		sidePanel.add(btnTest);
 		JButton button = new JButton("Test");
 		sidePanel.add(button);
@@ -117,8 +115,5 @@ public class MainWindow {
 		
 		JMenuItem mntmQuit = new JMenuItem("Quit");
 		mnFile.add(mntmQuit);
-		
-		((Graphics2D)canvas.getGraphics()).drawImage(new Bot().getFullImage(), 100, 100, null);
-		
 	}
 }
