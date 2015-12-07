@@ -17,6 +17,16 @@ public class Bot {
 	private Color gunColor;
 	private BufferedImage bodyImage;
 	private BufferedImage gunImage;
+	int rotation = 180;
+	
+
+	public int getRotation() {
+		return rotation;
+	}
+
+	public void setRotation(int rotation) {
+		this.rotation = rotation;
+	}
 
 	public Bot(Color body, Color gun) {
 		bodyColor = body;
@@ -67,8 +77,7 @@ public class Bot {
 	}
 	
 	public void drawFullImage(Graphics g, int x, int y) {
-		g.drawImage(bodyImage, x, y, null);
-		g.drawImage(gunImage, x, y, null);
+		drawFullImage(g, x, y, rotation);
 	}
 	
 	public void drawFullImage(Graphics g, int x, int y, double rotate) {

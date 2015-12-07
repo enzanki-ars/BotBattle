@@ -22,7 +22,7 @@ import java.awt.event.ActionEvent;
 public class MainWindow {
 
 	private JFrame frmBotbattle;
-	Canvas canvas;
+	static Canvas canvas;
 
 	/**
 	 * Launch the application.
@@ -33,6 +33,18 @@ public class MainWindow {
 				try {
 					MainWindow window = new MainWindow();
 					window.frmBotbattle.setVisible(true);
+					
+					Thread run = new Thread() {
+						public void run() {
+							int i = 0;
+							do {
+								i++;
+								new Bot(Color.BLUE, Color.CYAN).drawFullImage(canvas.getGraphics(), 100 + i, 100);
+							} while (true);
+						}
+					};
+					run.start();
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -67,11 +79,6 @@ public class MainWindow {
 		sidePanel.setLayout(new GridLayout(16, 0, 0, 0));
 		
 		JButton btnTest = new JButton("Test");
-		btnTest.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				new Bot(Color.BLUE, Color.CYAN).drawFullImage(canvas.getGraphics(), 100, 100);
-			}
-		});
 		sidePanel.add(btnTest);
 		JButton button = new JButton("Test");
 		sidePanel.add(button);
