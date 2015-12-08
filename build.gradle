@@ -4,7 +4,7 @@ apply plugin: 'findbugs'
 apply plugin: 'jdepend'
 apply plugin: 'pmd'
 apply plugin: 'eclipse'
-apply plugin: 'distribution'
+apply plugin: 'application'
 
 eclipse.classpath.downloadJavadoc = true
 
