@@ -28,8 +28,8 @@ public class MainWindow {
 	private JFrame frmBotbattle;
 	private static Canvas canvas;
 	private static List<Bot> bots = Collections.synchronizedList(new ArrayList<Bot>());
-	private long time;
-	private long lastTime;
+	private static long time;
+	private static long lastTime;
 	
 
 	/**
@@ -46,6 +46,7 @@ public class MainWindow {
 					
 					Thread run = new Thread() {
 						public void run() {
+							int frame = 0;
 							do {
 								lastTime = time;
 								time = System.nanoTime();
