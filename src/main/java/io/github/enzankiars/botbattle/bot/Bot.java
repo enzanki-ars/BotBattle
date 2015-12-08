@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import io.github.enzankiars.botbattle.MainWindow;
 import io.github.enzankiars.botbattle.util.TintImage;
 
 public class Bot {
@@ -18,6 +19,8 @@ public class Bot {
 	private BufferedImage bodyImage;
 	private BufferedImage gunImage;
 	int rotation = 180;
+	int x;
+	int y;
 	
 
 	public int getRotation() {
@@ -29,6 +32,9 @@ public class Bot {
 	}
 
 	public Bot(Color body, Color gun) {
+		x = (int) (Math.random() * MainWindow.getCanvasWidth());
+		y = (int) (Math.random() * MainWindow.getCanvasHeight());
+		
 		bodyColor = body;
 		gunColor = gun;
 		try {
@@ -75,13 +81,25 @@ public class Bot {
 	public void setGunImage(BufferedImage gunImage) {
 		this.gunImage = gunImage;
 	}
-	
-	public void drawFullImage(Graphics g, int x, int y) {
-		drawFullImage(g, x, y, rotation);
+
+	public int getX() {
+		return x;
 	}
-	
-	public void drawFullImage(Graphics g, int x, int y, double rotate) {
-		double rotationRequired = Math.toRadians(rotate);
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public void drawFullImage(Graphics g) {
+		double rotationRequired = Math.toRadians(rotation);
 		double locationBodyX = bodyImage.getWidth() / 2;
 		double locationBodyY = bodyImage.getHeight() / 2;
 		AffineTransform txBody = AffineTransform.getRotateInstance(rotationRequired, locationBodyX, locationBodyY);

@@ -11,18 +11,26 @@ import java.awt.Panel;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.GridLayout;
+
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JSplitPane;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import io.github.enzankiars.botbattle.bot.Bot;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class MainWindow {
 
 	private JFrame frmBotbattle;
-	static Canvas canvas;
+	private static Canvas canvas;
+	private static List<Bot> bots = Collections.synchronizedList(new ArrayList<Bot>());
+	private long time;
+	private long lastTime;
+	
 
 	/**
 	 * Launch the application.
@@ -34,12 +42,25 @@ public class MainWindow {
 					MainWindow window = new MainWindow();
 					window.frmBotbattle.setVisible(true);
 					
+					bots.add(new Bot(Color.BLACK, Color.CYAN));
+					
 					Thread run = new Thread() {
 						public void run() {
-							int i = 0;
+							int frame = 0;
 							do {
-								i++;
-								new Bot(Color.BLUE, Color.CYAN).drawFullImage(canvas.getGraphics(), 100 + i, 100);
+								frame++;
+								time = System.nanoTime();
+								
+								canvas.repaint();
+								
+								synchronized (bots) {
+									Iterator<Bot> j = bots.iterator(); // Must be in synchronized block
+									while (j.hasNext()) {
+										Bot n = j.next();
+										n.setRotation(frame/360);
+										//System.out.println("[MainThread] " + n.getRotation());
+									}
+								}
 							} while (true);
 						}
 					};
@@ -70,7 +91,23 @@ public class MainWindow {
 		frmBotbattle.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmBotbattle.getContentPane().setLayout(new BorderLayout(0, 0));
 		
-		canvas = new Canvas();
+		canvas = new Canvas() {
+			private static final long serialVersionUID = -1514620282447736707L;
+
+			@Override
+			public void paint(Graphics g) {
+				// TODO Auto-generated method stub
+				super.paint(g);
+				synchronized (bots) {
+					Iterator<Bot> i = bots.iterator(); // Must be in synchronized block
+					while (i.hasNext()) {
+						Bot c = i.next();
+						c.drawFullImage(g);
+						//System.out.println("[DrawThread] " + c.getRotation());
+					}
+				}
+			}
+		};
 		canvas.setBackground(new Color(85, 107, 47));
 		frmBotbattle.getContentPane().add(canvas, BorderLayout.CENTER);
 		
@@ -123,4 +160,13 @@ public class MainWindow {
 		JMenuItem mntmQuit = new JMenuItem("Quit");
 		mnFile.add(mntmQuit);
 	}
+	
+	public static int getCanvasWidth() {
+		return canvas.getWidth();
+	};
+	
+	public static int getCanvasHeight() {
+		return canvas.getHeight();
+	};
+	
 }
