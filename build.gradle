@@ -8,6 +8,8 @@ apply plugin: 'application'
 
 eclipse.classpath.downloadJavadoc = true
 
+mainClassName = "io.github.enzankiars.botbattle.MainWindow"
+
 repositories {
     jcenter()
 }
