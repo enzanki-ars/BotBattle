@@ -46,19 +46,21 @@ public class MainWindow {
 					
 					Thread run = new Thread() {
 						public void run() {
-							int frame = 0;
 							do {
-								frame++;
+								lastTime = time;
 								time = System.nanoTime();
 								
-								canvas.repaint();
+								if ((time - lastTime) > 16666667) {
+									frame++;
+									canvas.repaint();
 								
-								synchronized (bots) {
-									Iterator<Bot> j = bots.iterator(); // Must be in synchronized block
-									while (j.hasNext()) {
-										Bot n = j.next();
-										n.setRotation(frame/360);
-										//System.out.println("[MainThread] " + n.getRotation());
+									synchronized (bots) {
+										Iterator<Bot> j = bots.iterator(); // Must be in synchronized block
+										while (j.hasNext()) {
+											Bot n = j.next();
+											n.setRotation(frame/360);
+											//System.out.println("[MainThread] " + n.getRotation());
+										}
 									}
 								}
 							} while (true);
