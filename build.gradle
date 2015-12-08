@@ -10,6 +10,9 @@ eclipse.classpath.downloadJavadoc = true
 
 mainClassName = "io.github.enzankiars.botbattle.MainWindow"
 
+println System.getenv("CIRCLE_TEST_REPORTS")
+reportsDir = System.getenv("CIRCLE_TEST_REPORTS") ?: reportsDir
+
 repositories {
     jcenter()
 }
