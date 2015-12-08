@@ -1,0 +1,7 @@
+general:
+  artifacts: 
+    - "build" # relative to the build directory
+
+test:
+  post:
+    - gradle assembleDist
