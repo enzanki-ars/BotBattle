@@ -3,5 +3,7 @@ general:
     - "build" # relative to the build directory
 
 test:
+  override:
+    - gradle test
   post:
     - gradle assembleDist
