@@ -4,6 +4,6 @@ general:
 
 test:
   override:
-    - gradle test
+    - TERM=dumb gradle test
   post:
-    - gradle distZip distTar
+    - TERM=dumb gradle distZip distTar
