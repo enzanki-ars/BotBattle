@@ -1,6 +1,6 @@
 general:
   artifacts: 
-    - "build" # relative to the build directory
+    - "build/distributions"
 
 test:
   override:
