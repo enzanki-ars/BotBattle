@@ -18,6 +18,7 @@ apply plugin: 'jdepend'
 apply plugin: 'pmd'
 apply plugin: 'eclipse'
 apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'edu.sc.seis.launch4j'
 
 launch4j {
