@@ -7,3 +7,4 @@ test:
     - TERM=dumb gradle test
   post:
     - TERM=dumb gradle distZip distTar
+    - TERM=dumb gradle launch4j
