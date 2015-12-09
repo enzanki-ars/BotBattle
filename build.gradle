@@ -10,7 +10,7 @@ eclipse.classpath.downloadJavadoc = true
 
 mainClassName = "io.github.enzankiars.botbattle.MainWindow"
 
-println System.getenv("CIRCLE_TEST_REPORTS")
+//println System.getenv("CIRCLE_TEST_REPORTS")
 //reportsDir = System.getenv("CIRCLE_TEST_REPORTS") ?: reportsDir
 
 repositories {
@@ -19,5 +19,6 @@ repositories {
 
 dependencies {
     compile 'ch.qos.logback:logback-classic:1.1.3'
+    compile 'org.python:jython:2.7.0'
     testCompile 'junit:junit:4.12'
 }

@@ -15,9 +15,15 @@ import java.awt.GridLayout;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JSplitPane;
+
+import org.python.core.PyObject;
+import org.python.util.PythonInterpreter;
+
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import io.github.enzankiars.botbattle.bot.Bot;
+import io.github.enzankiars.botbattle.util.JythonObjectFactory;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -42,7 +48,19 @@ public class MainWindow {
 					MainWindow window = new MainWindow();
 					window.frmBotbattle.setVisible(true);
 					
-					bots.add(new Bot(Color.BLACK, Color.CYAN));
+					bots.add(new Bot(Color.BLACK, Color.CYAN) {
+						@Override
+						public void run() {
+							setRotation(getRotation()+1);
+						}
+					});
+					
+					JythonObjectFactory pyBotFactory = new JythonObjectFactory(
+				            Bot.class, "TestBot", "TestBot");
+
+				    Bot pyBot = (Bot) pyBotFactory.createObject(Color.RED, Color.BLUE);
+				    
+				    bots.add(pyBot);
 					
 					Thread run = new Thread() {
 						public void run() {
@@ -59,8 +77,9 @@ public class MainWindow {
 										Iterator<Bot> j = bots.iterator(); // Must be in synchronized block
 										while (j.hasNext()) {
 											Bot n = j.next();
-											n.setRotation(frame/360);
+											n.run();
 											//System.out.println("[MainThread] " + n.getRotation());
+											
 										}
 									}
 								}

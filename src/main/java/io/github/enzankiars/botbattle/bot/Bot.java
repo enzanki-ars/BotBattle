@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
 import io.github.enzankiars.botbattle.MainWindow;
 import io.github.enzankiars.botbattle.util.TintImage;
 
-public class Bot {
+public abstract class Bot {
 
 	private Color bodyColor;
 	private Color gunColor;
@@ -22,6 +22,7 @@ public class Bot {
 	int x;
 	int y;
 	
+	public abstract void run();
 
 	public int getRotation() {
 		return rotation;
