@@ -21,7 +21,10 @@ apply plugin: 'application'
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'edu.sc.seis.launch4j'
 
+copyL4jLib.dependsOn shadowJar
+
 launch4j {
+    outfile = 'BotBattle.exe'
     mainClassName = 'io.github.enzankiars.botbattle.MainWindow'
     copyConfigurable = project.tasks.shadowJar.outputs.files
     jar = "lib/${project.tasks.shadowJar.archiveName}"
