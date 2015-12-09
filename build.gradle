@@ -6,6 +6,23 @@ apply plugin: 'pmd'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "gradle.plugin.edu.sc.seis.gradle:launch4j:1.6.1"
+  }
+}
+
+apply plugin: "edu.sc.seis.launch4j"
+
+launch4j {
+  mainClassName = 'io.github.enzankiars.botbattle.MainWindow'
+}
+
 eclipse.classpath.downloadJavadoc = true
 
 mainClassName = "io.github.enzankiars.botbattle.MainWindow"
