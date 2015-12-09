@@ -5,7 +5,6 @@ apply plugin: 'jdepend'
 apply plugin: 'pmd'
 apply plugin: 'eclipse'
 apply plugin: 'application'
-apply plugin: 'edu.sc.seis.launch4j'
 
 eclipse.classpath.downloadJavadoc = true
 
