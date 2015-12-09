@@ -1,3 +1,7 @@
+plugins {
+  id "edu.sc.seis.launch4j" version "1.6.1"
+}
+
 apply plugin: 'java'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
@@ -5,10 +9,6 @@ apply plugin: 'jdepend'
 apply plugin: 'pmd'
 apply plugin: 'eclipse'
 apply plugin: 'application'
-
-plugins {
-  id "edu.sc.seis.launch4j" version "1.6.1"
-}
 
 launch4j {
   mainClassName = 'io.github.enzankiars.botbattle.MainWindow'
