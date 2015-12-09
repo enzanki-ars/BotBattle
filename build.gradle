@@ -6,6 +6,7 @@ buildscript {
   }
   dependencies {
     classpath 'gradle.plugin.edu.sc.seis.gradle:launch4j:1.6.1'
+    classpath 'org.codehaus.groovy:groovy-backports-compat23:2.4.5'
   }
 }
 
