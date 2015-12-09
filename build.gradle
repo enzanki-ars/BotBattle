@@ -9,6 +9,7 @@ apply plugin: 'application'
 eclipse.classpath.downloadJavadoc = true
 
 mainClassName = "io.github.enzankiars.botbattle.MainWindow"
+sourceCompatibility = '1.6'
 
 //println System.getenv("CIRCLE_TEST_REPORTS")
 //reportsDir = System.getenv("CIRCLE_TEST_REPORTS") ?: reportsDir
