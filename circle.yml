@@ -5,7 +5,7 @@ general:
 
 test:
   override:
-    - TERM=dumb gradle test
+    - TERM=dumb ./gradlew test
   post:
     - TERM=dumb ./gradlew distZip distTar
     - TERM=dumb ./gradlew launch4j
