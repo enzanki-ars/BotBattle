@@ -1,7 +1,7 @@
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
-public class Test {
+public class TestJUnit {
 
 	@Test
 	public void helloWorld() {
