@@ -1,6 +1,5 @@
 general:
   artifacts: 
-    - "build"
     - "build/launch4j"
     - "build/distributions"
 
