@@ -42,7 +42,7 @@ launch4j {
 eclipse.classpath.downloadJavadoc = true
 
 mainClassName = "io.github.enzankiars.botbattle.MainWindow"
-sourceCompatibility = '1.6'
+sourceCompatibility = '1.7'
 
 //println System.getenv("CIRCLE_TEST_REPORTS")
 //reportsDir = System.getenv("CIRCLE_TEST_REPORTS") ?: reportsDir
