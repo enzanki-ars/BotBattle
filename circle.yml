@@ -6,6 +6,8 @@ general:
 test:
   override:
     - TERM=dumb ./gradlew test
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+    - cp ./build/test-results $CIRCLE_TEST_REPORTS/junit/
   post:
     - TERM=dumb ./gradlew distZip distTar
     - TERM=dumb ./gradlew launch4j
