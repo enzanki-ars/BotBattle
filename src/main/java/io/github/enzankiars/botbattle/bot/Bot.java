@@ -18,18 +18,20 @@ public abstract class Bot {
 	private Color gunColor;
 	private BufferedImage bodyImage;
 	private BufferedImage gunImage;
-	int rotation = 180;
+	int rotationBody = 180;
+	int rotationGun = 180;
 	int x;
 	int y;
 	
 	public abstract void run();
 
 	public int getRotation() {
-		return rotation;
+		return rotationBody;
 	}
 
 	public void setRotation(int rotation) {
-		this.rotation = rotation;
+		rotationBody = rotation;
+		rotationGun = rotation;
 	}
 
 	public Bot(Color body, Color gun) {
@@ -46,9 +48,9 @@ public abstract class Bot {
 			gunImage = ImageIO.read(getClass().getClassLoader().getResource("gun.png"));
 			BufferedImage maskGun = TintImage.generateMask(gunImage, gun, 0.5f);
 			gunImage = TintImage.tint(gunImage, maskGun);
-        } catch (IOException exp) {
-            exp.printStackTrace();
-        }
+        	} catch (IOException exp) {
+        	    exp.printStackTrace();
+        	}
 	}
 
 	public Color getBodyColor() {
@@ -100,15 +102,14 @@ public abstract class Bot {
 	}
 
 	public void drawFullImage(Graphics g) {
-		double rotationRequired = Math.toRadians(rotation);
 		double locationBodyX = bodyImage.getWidth() / 2;
 		double locationBodyY = bodyImage.getHeight() / 2;
-		AffineTransform txBody = AffineTransform.getRotateInstance(rotationRequired, locationBodyX, locationBodyY);
+		AffineTransform txBody = AffineTransform.getRotateInstance(Math.toRadians(rotationBody), locationBodyX, locationBodyY);
 		AffineTransformOp opBody = new AffineTransformOp(txBody, AffineTransformOp.TYPE_BILINEAR);
 		
 		double locationGunX = gunImage.getWidth() / 2;
 		double locationGunY = gunImage.getHeight() / 2;
-		AffineTransform txGun = AffineTransform.getRotateInstance(rotationRequired, locationGunX, locationGunY);
+		AffineTransform txGun = AffineTransform.getRotateInstance(Math.toRadians(rotationGun), locationGunX, locationGunY);
 		AffineTransformOp opGun = new AffineTransformOp(txGun, AffineTransformOp.TYPE_BILINEAR);
 
 		// Drawing the rotated image at the required drawing locations
