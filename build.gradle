@@ -22,7 +22,11 @@ apply plugin: 'edu.sc.seis.launch4j'
 
 copyL4jLib.dependsOn shadowJar
 
-println gradle.gradleVersion
+task versionPrint {
+  doLast {
+    println gradle.gradleVersion
+  }
+}
 
 launch4j {
     mainClassName = 'io.github.enzankiars.botbattle.MainWindow'
