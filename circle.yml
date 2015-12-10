@@ -5,6 +5,7 @@ general:
 
 test:
   override:
+    - gradle -q versionPrint
     - TERM=dumb ./gradlew test
   post:
     - TERM=dumb ./gradlew distZip distTar
