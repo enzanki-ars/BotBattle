@@ -20,6 +20,14 @@ apply plugin: 'application'
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'edu.sc.seis.launch4j'
 
+reports {
+  html {
+    enabled true
+  }
+  reports.junitXml.destination = "$buildDir/test-results"
+  reports.html.destination = "$buildDir/test-results"
+}
+
 copyL4jLib.dependsOn shadowJar
 
 task versionPrint {
