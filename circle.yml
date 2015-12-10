@@ -1,6 +1,6 @@
 general:
   artifacts: 
-    - "launch4j"
+    - "build/launch4j"
     - "build/distributions"
 
 test:
