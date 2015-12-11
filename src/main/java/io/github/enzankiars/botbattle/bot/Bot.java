@@ -22,35 +22,42 @@ public abstract class Bot {
 	int rotationGun = 180;
 	int x;
 	int y;
-	
+
 	public abstract void run();
 
-	public int getRotation() {
+	public int getBodyRotation() {
 		return rotationBody;
 	}
 
-	public void setRotation(int rotation) {
-		rotationBody = rotation;
-		rotationGun = rotation;
+	public void addBodyRotation(int rotation) {
+		rotationBody += rotation;
+	}
+	
+	public int getGunRotation() {
+		return rotationGun;
+	}
+
+	public void addGunRotation(int rotation) {
+		rotationGun += rotation;
 	}
 
 	public Bot(Color body, Color gun) {
-		x = (int) (Math.random() * MainWindow.getCanvasWidth());
-		y = (int) (Math.random() * MainWindow.getCanvasHeight());
-		
+		x = (int) (Math.random() * (MainWindow.getCanvasWidth() - 40)) + 20;
+		y = (int) (Math.random() * (MainWindow.getCanvasHeight() - 40)) + 20;
+
 		bodyColor = body;
 		gunColor = gun;
 		try {
 			bodyImage = ImageIO.read(getClass().getClassLoader().getResource("body.png"));
 			BufferedImage maskBody = TintImage.generateMask(bodyImage, body, 0.5f);
 			bodyImage = TintImage.tint(bodyImage, maskBody);
-			
+
 			gunImage = ImageIO.read(getClass().getClassLoader().getResource("gun.png"));
 			BufferedImage maskGun = TintImage.generateMask(gunImage, gun, 0.5f);
 			gunImage = TintImage.tint(gunImage, maskGun);
-        	} catch (IOException exp) {
-        	    exp.printStackTrace();
-        	}
+		} catch (IOException exp) {
+			exp.printStackTrace();
+		}
 	}
 
 	public Color getBodyColor() {
@@ -104,12 +111,14 @@ public abstract class Bot {
 	public void drawFullImage(Graphics g) {
 		double locationBodyX = bodyImage.getWidth() / 2;
 		double locationBodyY = bodyImage.getHeight() / 2;
-		AffineTransform txBody = AffineTransform.getRotateInstance(Math.toRadians(rotationBody), locationBodyX, locationBodyY);
+		AffineTransform txBody = AffineTransform.getRotateInstance(Math.toRadians(rotationBody), locationBodyX,
+				locationBodyY);
 		AffineTransformOp opBody = new AffineTransformOp(txBody, AffineTransformOp.TYPE_BILINEAR);
-		
+
 		double locationGunX = gunImage.getWidth() / 2;
 		double locationGunY = gunImage.getHeight() / 2;
-		AffineTransform txGun = AffineTransform.getRotateInstance(Math.toRadians(rotationGun), locationGunX, locationGunY);
+		AffineTransform txGun = AffineTransform.getRotateInstance(Math.toRadians(rotationGun), locationGunX,
+				locationGunY);
 		AffineTransformOp opGun = new AffineTransformOp(txGun, AffineTransformOp.TYPE_BILINEAR);
 
 		// Drawing the rotated image at the required drawing locations

@@ -9,21 +9,21 @@ import org.python.core.PySystemState;
  */
 public class JythonObjectFactory {
 
-	private final Class interfaceType;
+	private final Class<?> interfaceType;
 	private final PyObject klass;
 
 	// Constructor obtains a reference to the importer, module, and the class
 	// name
-	public JythonObjectFactory(PySystemState state, Class interfaceType, String moduleName, String className) {
+	public JythonObjectFactory(PySystemState state, Class<?> interfaceType, String moduleName, String className) {
 		this.interfaceType = interfaceType;
 		PyObject importer = state.getBuiltins().__getitem__(Py.newString("__import__"));
 		PyObject module = importer.__call__(Py.newString(moduleName));
 		klass = module.__getattr__(className);
-		System.err.println("module=" + module + ",class=" + klass);
+		//System.err.println("module=" + module + ",class=" + klass);
 	}
 
 	// This constructor passes through to the other constructor
-	public JythonObjectFactory(Class interfaceType, String moduleName, String className) {
+	public JythonObjectFactory(Class<?> interfaceType, String moduleName, String className) {
 		this(new PySystemState(), interfaceType, moduleName, className);
 	}
 

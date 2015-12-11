@@ -8,6 +8,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -15,9 +18,6 @@ import java.awt.GridLayout;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JSplitPane;
-
-import org.python.core.PyObject;
-import org.python.util.PythonInterpreter;
 
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -28,16 +28,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MainWindow {
 
 	private JFrame frmBotbattle;
 	private static Canvas canvas;
 	private static List<Bot> bots = Collections.synchronizedList(new ArrayList<Bot>());
-	private static long time;
-	private static long lastTime;
+	private static boolean isInGame = false;
+	private static int frame = 0;
+	private static JLabel lblTimeValue;
 	
-
 	/**
 	 * Launch the application.
 	 */
@@ -48,45 +51,17 @@ public class MainWindow {
 					MainWindow window = new MainWindow();
 					window.frmBotbattle.setVisible(true);
 					
-					bots.add(new Bot(Color.BLACK, Color.CYAN) {
-						@Override
-						public void run() {
-							setRotation(getRotation()+1);
-						}
-					});
+					init();
 					
-					JythonObjectFactory pyBotFactory = new JythonObjectFactory(
-				            Bot.class, "TestBot", "TestBot");
-
-				    Bot pyBot = (Bot) pyBotFactory.createObject(Color.RED, Color.BLUE);
-				    
-				    bots.add(pyBot);
-					
-					Thread run = new Thread() {
-						public void run() {
-							int frame = 0;
-							do {
-								lastTime = time;
-								time = System.nanoTime();
-								
-								if ((time - lastTime) > 16666667) {
-									frame++;
-									canvas.repaint();
-								
-									synchronized (bots) {
-										Iterator<Bot> j = bots.iterator(); // Must be in synchronized block
-										while (j.hasNext()) {
-											Bot n = j.next();
-											n.run();
-											//System.out.println("[MainThread] " + n.getRotation());
-											
-										}
-									}
-								}
-							} while (true);
-						}
-					};
-					run.start();
+				    final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+				    executorService.scheduleAtFixedRate(new Runnable() {
+				        @Override
+				        public void run() {
+							if (isInGame) {
+								runBots();
+							}
+				        }
+				    }, 0, 40, TimeUnit.MILLISECONDS);
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -94,6 +69,41 @@ public class MainWindow {
 				
 			}
 		});
+	}
+	
+	private static void runBots() {
+		//System.out.println(":)");
+		frame++;
+		canvas.repaint();
+		synchronized (bots) {
+			Iterator<Bot> j = bots.iterator(); // Must be in synchronized block
+			while (j.hasNext()) {
+				Bot n = j.next();
+				n.run();
+				//System.out.println("[MainThread] " + n.getRotation());
+			}
+		}
+		lblTimeValue.setText(String.valueOf(frame));
+	}
+
+	private static void init() {
+		bots = Collections.synchronizedList(new ArrayList<Bot>());
+		frame=0;
+		
+		bots.add(new Bot(Color.BLACK, Color.CYAN) {
+			@Override
+			public void run() {
+				addBodyRotation(1);
+				System.out.println(getBodyRotation());
+			}
+		});
+		
+		JythonObjectFactory pyBotFactory = new JythonObjectFactory(
+	            Bot.class, "TestBot", "TestBot");
+
+	    Bot pyBot = (Bot) pyBotFactory.createObject(Color.RED, Color.BLUE);
+	    
+	    bots.add(pyBot);
 	}
 
 	/**
@@ -149,12 +159,33 @@ public class MainWindow {
 		bottomPane.setLeftComponent(leftPanel);
 		
 		JButton btnStart = new JButton("Start");
+		btnStart.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				isInGame = true;
+			}
+		});
 		leftPanel.add(btnStart);
 		
 		JButton btnPause = new JButton("Pause");
+		btnPause.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				isInGame = false;
+			}
+		});
 		leftPanel.add(btnPause);
 		
 		JButton btnRestart = new JButton("Restart");
+		btnRestart.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				init();
+			}
+		});
 		leftPanel.add(btnRestart);
 		
 		JPanel rightPanel = new JPanel();
@@ -170,7 +201,7 @@ public class MainWindow {
 		JLabel lblTime = new JLabel("Time:");
 		rightPanel.add(lblTime);
 		
-		JLabel lblTimeValue = new JLabel("0");
+		lblTimeValue = new JLabel("0");
 		rightPanel.add(lblTimeValue);
 		
 		JMenuBar menuBar = new JMenuBar();
