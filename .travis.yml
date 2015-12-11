@@ -1,0 +1,9 @@
+language: java
+
+script:
+  - TERM=dumb ./gradlew test
+
+after_success:
+#  - TERM=dumb ./gradlew distZip
+#  - TERM=dumb ./gradlew distTar
+#  - TERM=dumb ./gradlew launch4j
