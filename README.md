@@ -1,3 +1,3 @@
 # BotBattle
 
-[![Circle CI](https://circleci.com/gh/enzanki-ars/BotBattle.svg?style=svg)](https://circleci.com/gh/enzanki-ars/BotBattle)
+[![Circle CI](https://img.shields.io/circleci/project/enzanki-ars/BotBattle.svg)](https://circleci.com/gh/enzanki-ars/BotBattle)
