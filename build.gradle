@@ -36,7 +36,7 @@ task versionPrint {
 launch4j {
     mainClassName = 'io.github.enzankiars.botbattle.MainWindow'
     copyConfigurable = project.tasks.shadowJar.outputs.files
-    bundledJreAsFallback = true
+    bundledJrePath = 'jre'
     jar = "lib/${project.tasks.shadowJar.archiveName}"
 }
 
