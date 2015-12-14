@@ -18,10 +18,12 @@ public abstract class Bot {
 	private Color gunColor;
 	private BufferedImage bodyImage;
 	private BufferedImage gunImage;
-	int rotationBody = 180;
-	int rotationGun = 180;
-	int x;
-	int y;
+	private int rotationBody = 180;
+	private int rotationGun = 180;
+	private int x;
+	private int y;
+	private String name;
+	private BotStatus botStatusWindow;
 
 	public abstract void run();
 
@@ -41,12 +43,13 @@ public abstract class Bot {
 		rotationGun += rotation;
 	}
 
-	public Bot(Color body, Color gun) {
+	public Bot(Color body, Color gun, String name) {
 		x = (int) (Math.random() * (MainWindow.getCanvasWidth() - 40)) + 20;
 		y = (int) (Math.random() * (MainWindow.getCanvasHeight() - 40)) + 20;
 
 		bodyColor = body;
 		gunColor = gun;
+		this.name = name;
 		try {
 			bodyImage = ImageIO.read(getClass().getClassLoader().getResource("body.png"));
 			BufferedImage maskBody = TintImage.generateMask(bodyImage, body, 0.5f);
@@ -58,6 +61,8 @@ public abstract class Bot {
 		} catch (IOException exp) {
 			exp.printStackTrace();
 		}
+		
+		botStatusWindow = new BotStatus(this);
 	}
 
 	public Color getBodyColor() {
@@ -124,5 +129,21 @@ public abstract class Bot {
 		// Drawing the rotated image at the required drawing locations
 		g.drawImage(opBody.filter(bodyImage, null), x, y, null);
 		g.drawImage(opGun.filter(gunImage, null), x, y, null);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public BotStatus getBotStatusWindow() {
+		return botStatusWindow;
+	}
+
+	public void updateBotStatusWindow() {
+		botStatusWindow.update();
 	}
 }

@@ -35,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 public class MainWindow {
 
 	private JFrame frmBotbattle;
+	private static Panel sidePanel;
 	private static Canvas canvas;
 	private static List<Bot> bots = Collections.synchronizedList(new ArrayList<Bot>());
 	private static boolean isInGame = false;
@@ -80,6 +81,7 @@ public class MainWindow {
 			while (j.hasNext()) {
 				Bot n = j.next();
 				n.run();
+				n.updateBotStatusWindow();
 				//System.out.println("[MainThread] " + n.getRotation());
 			}
 		}
@@ -90,7 +92,7 @@ public class MainWindow {
 		bots = Collections.synchronizedList(new ArrayList<Bot>());
 		frame=0;
 		
-		bots.add(new Bot(Color.BLACK, Color.CYAN) {
+		bots.add(new Bot(Color.BLACK, Color.CYAN, "TestJavaBot") {
 			@Override
 			public void run() {
 				addBodyRotation(1);
@@ -101,9 +103,10 @@ public class MainWindow {
 		JythonObjectFactory pyBotFactory = new JythonObjectFactory(
 	            Bot.class, "TestBot", "TestBot");
 
-	    Bot pyBot = (Bot) pyBotFactory.createObject(Color.RED, Color.BLUE);
+	    Bot pyBot = (Bot) pyBotFactory.createObject(Color.RED, Color.BLUE, "TestPythonBot");
 	    
 	    bots.add(pyBot);
+	    setSidePanel();
 	}
 
 	/**
@@ -143,14 +146,9 @@ public class MainWindow {
 		canvas.setBackground(new Color(85, 107, 47));
 		frmBotbattle.getContentPane().add(canvas, BorderLayout.CENTER);
 		
-		Panel sidePanel = new Panel();
+		sidePanel = new Panel();
 		frmBotbattle.getContentPane().add(sidePanel, BorderLayout.EAST);
 		sidePanel.setLayout(new GridLayout(16, 0, 0, 0));
-		
-		JButton btnTest = new JButton("Test");
-		sidePanel.add(btnTest);
-		JButton button = new JButton("Test");
-		sidePanel.add(button);
 		
 		JSplitPane bottomPane = new JSplitPane();
 		frmBotbattle.getContentPane().add(bottomPane, BorderLayout.SOUTH);
@@ -183,6 +181,7 @@ public class MainWindow {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				isInGame = false;
 				init();
 			}
 		});
@@ -212,6 +211,28 @@ public class MainWindow {
 		
 		JMenuItem mntmQuit = new JMenuItem("Quit");
 		mnFile.add(mntmQuit);
+	}
+	
+	public static void setSidePanel() {
+		for (Bot bot : bots) {
+			JButton button = new JButton(bot.getName());
+			button.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								bot.getBotStatusWindow().setVisible(true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
+				}
+			});
+			sidePanel.add(button);
+			
+		}
 	}
 	
 	public static int getCanvasWidth() {
