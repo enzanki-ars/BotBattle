@@ -222,7 +222,7 @@ public class MainWindow {
 					EventQueue.invokeLater(new Runnable() {
 						public void run() {
 							try {
-								botWindow.getBotStatusWindow().setVisible(true);
+								final botWindow.getBotStatusWindow().setVisible(true);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
