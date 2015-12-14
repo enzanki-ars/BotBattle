@@ -3,6 +3,10 @@ general:
     - "build/launch4j/BotBattle.exe"
     - "build/distributions"
 
+dependencies:
+  override:
+    - TERM=dumb ./gradlew assemble
+
 test:
   post:
     - mkdir -p $CIRCLE_TEST_REPORTS/junit/
