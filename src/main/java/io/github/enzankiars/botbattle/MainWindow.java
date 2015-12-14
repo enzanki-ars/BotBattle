@@ -214,7 +214,7 @@ public class MainWindow {
 	}
 	
 	public static void setSidePanel() {
-		for (Bot bot : bots) {
+		for (final Bot bot : bots) {
 			JButton button = new JButton(bot.getName());
 			button.addActionListener(new ActionListener() {
 				@Override
