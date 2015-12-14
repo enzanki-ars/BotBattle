@@ -1,6 +1,6 @@
 general:
   artifacts: 
-    - "build/launch4j"
+    - "build/launch4j/BotBattle.exe"
     - "build/distributions"
 
 test:
