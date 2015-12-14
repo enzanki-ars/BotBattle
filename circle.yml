@@ -5,7 +5,7 @@ general:
 
 dependencies:
   override:
-    - TERM=dumb ./gradlew compileJava
+    - TERM=dumb ./gradlew compileJava compileTestJava copyL4jBinLib
 
 test:
   post:
