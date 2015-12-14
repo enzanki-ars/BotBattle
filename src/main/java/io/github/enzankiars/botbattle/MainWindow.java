@@ -214,22 +214,10 @@ public class MainWindow {
 	}
 	
 	public static void setSidePanel() {
-		for (Bot botWindow : bots) {
-			JButton button = new JButton(botWindow.getName());
+		for (Bot bot : bots) {
+			JButton button = new JButton(bot.getName());
 			button.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					EventQueue.invokeLater(new Runnable() {
-						public void run() {
-							try {
-								BotStatus botStatusWindow = botWindow.getBotStatusWindow();
-								botStatusWindow.setVisible(true);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					});
-				}
+				bot.getBotStatusWindow()setVisible(true);
 			});
 			sidePanel.add(button);
 			
