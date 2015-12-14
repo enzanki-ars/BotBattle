@@ -4,6 +4,17 @@ script:
   - TERM=dumb ./gradlew test
 
 after_success:
-#  - TERM=dumb ./gradlew distZip
-#  - TERM=dumb ./gradlew distTar
-#  - TERM=dumb ./gradlew launch4j
+  - TERM=dumb ./gradlew distZip
+  - TERM=dumb ./gradlew distTar
+  - TERM=dumb ./gradlew launch4j
+
+deploy:
+  provider: releases
+  api_key: GITHUB_OAUTH_TOKEN
+  file:
+    - "build/launch4j/BotBattle.exe"
+    - "build/distributions/BotBattle.tar"
+    - "build/distributions/BotBattle.zip"
+  skip_cleanup: true
+  on:
+    tags: true
