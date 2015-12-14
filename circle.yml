@@ -5,7 +5,7 @@ general:
 
 dependencies:
   override:
-    - TERM=dumb ./gradlew assemble
+    - TERM=dumb ./gradlew compileJava
 
 test:
   post:
