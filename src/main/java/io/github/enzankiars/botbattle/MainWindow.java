@@ -217,7 +217,10 @@ public class MainWindow {
 		for (Bot bot : bots) {
 			JButton button = new JButton(bot.getName());
 			button.addActionListener(new ActionListener() {
-				bot.getBotStatusWindow().setVisible(true);
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					bot.getBotStatusWindow().setVisible(true);
+				}
 			});
 			sidePanel.add(button);
 			
