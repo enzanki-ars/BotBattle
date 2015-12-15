@@ -6,11 +6,10 @@ general:
 dependencies:
   override:
     - TERM=dumb ./gradlew compileJava compileTestJava copyL4jBinLib
-    - TERM=dumb ./gradlew check
 
 test:
   override:
-    - TERM=dumb ./gradlew test
+    - TERM=dumb ./gradlew test check
   post:
     - mkdir -p $CIRCLE_TEST_REPORTS/junit/ $CIRCLE_TEST_REPORTS/checkstyle/ $CIRCLE_TEST_REPORTS/findbugs/
     - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \; && find . -type f -regex ".*/build/test-results/.*html" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \; && find . -type f -regex ".*/build/reports/checkstyle/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/checkstyle/ \; && find . -type f -regex ".*/build/reports/findbugs/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/findbugs/ \;
