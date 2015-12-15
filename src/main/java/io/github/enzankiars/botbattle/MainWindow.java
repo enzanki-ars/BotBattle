@@ -96,7 +96,7 @@ public class MainWindow {
 			@Override
 			public void run() {
 				addBodyRotation(1);
-				System.out.println(getBodyRotation());
+				//System.out.println(getBodyRotation());
 			}
 		});
 		
@@ -183,6 +183,9 @@ public class MainWindow {
 			public void actionPerformed(ActionEvent e) {
 				isInGame = false;
 				init();
+				canvas.paint(canvas.getGraphics());
+				frame = 0;
+				lblTimeValue.setText(String.valueOf(frame));
 			}
 		});
 		leftPanel.add(btnRestart);

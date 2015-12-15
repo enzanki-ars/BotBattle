@@ -1,8 +1,5 @@
 package io.github.enzankiars.botbattle.bot;
 
-import java.awt.Color;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -12,6 +9,12 @@ import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.JCheckBox;
+import javax.swing.ButtonGroup;
+import javax.swing.JRadioButton;
+import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class BotStatus extends JFrame {
 
@@ -29,7 +32,13 @@ public class BotStatus extends JFrame {
 	private Bot bot;
 	private JLabel lblGunRotation;
 	private JTextField txtGunRotation;
-
+	private JLabel lblNormalizeAngles;
+	private JCheckBox chckbxNormalize;
+	private JLabel lblAngleFormat;
+	private JRadioButton rdbtnDegrees;
+	private JPanel panel;
+	private JRadioButton rdbtnRadians;
+	
 	/**
 	 * Create the frame.
 	 */
@@ -47,6 +56,10 @@ public class BotStatus extends JFrame {
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),},
 			new RowSpec[] {
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -103,12 +116,79 @@ public class BotStatus extends JFrame {
 		txtGunRotation.setText(String.valueOf(this.bot.getGunRotation()));
 		txtX.setText(String.valueOf(this.bot.getX()));
 		txtY.setText(String.valueOf(this.bot.getY()));
+		
+		lblNormalizeAngles = new JLabel("Normalize Angles:");
+		contentPane.add(lblNormalizeAngles, "2, 12, right, default");
+		
+		chckbxNormalize = new JCheckBox("Normalize");
+		chckbxNormalize.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				update();
+			}
+		});
+		contentPane.add(chckbxNormalize, "4, 12");
+		
+		lblAngleFormat = new JLabel("Angle Format:");
+		contentPane.add(lblAngleFormat, "2, 14, right, default");
+		
+		panel = new JPanel();
+		contentPane.add(panel, "4, 14, fill, fill");
+		panel.setLayout(new GridLayout(0, 1, 0, 0));
+		
+		ButtonGroup buttonGroup = new ButtonGroup();
+		
+		rdbtnDegrees = new JRadioButton("Degrees");
+		rdbtnDegrees.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				update();
+			}
+		});
+		rdbtnDegrees.setSelected(true);
+		panel.add(rdbtnDegrees);
+		
+		rdbtnRadians = new JRadioButton("Radians");
+		rdbtnRadians.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				update();
+			}
+		});
+		panel.add(rdbtnRadians);
+		
+		buttonGroup.add(rdbtnDegrees);
+		buttonGroup.add(rdbtnRadians);
 	}
 	
 	public void update() {
 		txtName.setText(this.bot.getName());
-		txtBodyRotation.setText(String.valueOf(this.bot.getBodyRotation()));
-		txtGunRotation.setText(String.valueOf(this.bot.getGunRotation()));
+		if (chckbxNormalize.isSelected()) {
+			if (rdbtnDegrees.isSelected()) {
+				txtBodyRotation.setText(String.valueOf(this.bot.getBodyRotation() % 360));
+				txtGunRotation.setText(String.valueOf(this.bot.getGunRotation() % 360));
+			}
+			else if (rdbtnRadians.isSelected()) {
+				txtBodyRotation.setText(String.valueOf(Math.toRadians(this.bot.getBodyRotation()) % 2*Math.PI));
+				txtGunRotation.setText(String.valueOf(Math.toRadians(this.bot.getGunRotation()) % 2*Math.PI));
+			}
+			else {
+				System.err.println("??? No Degree/Radian Selected");
+			}
+		}
+		else if (!chckbxNormalize.isSelected()) {
+			if (rdbtnDegrees.isSelected()) {
+				txtBodyRotation.setText(String.valueOf(this.bot.getBodyRotation()));
+				txtGunRotation.setText(String.valueOf(this.bot.getGunRotation()));
+			}
+			else if (rdbtnRadians.isSelected()) {
+				txtBodyRotation.setText(String.valueOf(Math.toRadians(this.bot.getBodyRotation())));
+				txtGunRotation.setText(String.valueOf(Math.toRadians(this.bot.getGunRotation())));
+			}
+			else {
+				System.err.println("??? No Degree/Radian Selected");
+			}
+		}
+		else {
+			System.err.println("??? Normalize is acting weird");
+		}
 		txtX.setText(String.valueOf(this.bot.getX()));
 		txtY.setText(String.valueOf(this.bot.getY()));
 	}
