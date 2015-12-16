@@ -91,7 +91,7 @@ public class MainWindow {
 				//System.out.println("[MainThread] " + n.getRotation());
 			}
 		}
-		//canvas.repaint();
+		canvas.repaint();
 		lblTimeValue.setText(String.valueOf(frame));
 	}
 
