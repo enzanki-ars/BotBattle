@@ -30,7 +30,6 @@ import javax.swing.JSplitPane;
 import io.github.enzankiars.botbattle.bot.Bot;
 import io.github.enzankiars.botbattle.bot.demo.DemoBot;
 import io.github.enzankiars.botbattle.util.JythonObjectFactory;
-import javafx.scene.canvas.GraphicsContext;
 
 public class MainWindow {
 
