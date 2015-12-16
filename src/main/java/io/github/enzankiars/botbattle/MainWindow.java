@@ -22,6 +22,7 @@ import javax.swing.JSplitPane;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import io.github.enzankiars.botbattle.bot.Bot;
+import io.github.enzankiars.botbattle.bot.demo.DemoBot;
 import io.github.enzankiars.botbattle.util.JythonObjectFactory;
 
 import java.util.ArrayList;
@@ -34,7 +35,11 @@ import java.util.concurrent.TimeUnit;
 
 public class MainWindow {
 
-	private JFrame frmBotbattle;
+	private static JFrame frmBotbattle;
+	public static JFrame getFrmBotbattle() {
+		return frmBotbattle;
+	}
+
 	private static Panel sidePanel;
 	private static Canvas canvas;
 	private static List<Bot> bots = Collections.synchronizedList(new ArrayList<Bot>());
@@ -49,8 +54,8 @@ public class MainWindow {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainWindow window = new MainWindow();
-					window.frmBotbattle.setVisible(true);
+					initialize();
+					frmBotbattle.setVisible(true);
 					
 					init();
 					
@@ -99,6 +104,7 @@ public class MainWindow {
 				//System.out.println(getBodyRotation());
 			}
 		});
+		bots.add(new DemoBot(Color.GRAY, Color.GREEN, "DemoBot"));
 		
 		JythonObjectFactory pyBotFactory = new JythonObjectFactory(
 	            Bot.class, "TestBot", "TestBot");
@@ -110,16 +116,9 @@ public class MainWindow {
 	}
 
 	/**
-	 * Create the application.
-	 */
-	public MainWindow() {
-		initialize();
-	}
-
-	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private static void initialize() {
 		frmBotbattle = new JFrame();
 		frmBotbattle.setTitle("BotBattle");
 		frmBotbattle.setBounds(100, 100, 720, 480);
