@@ -1,30 +1,15 @@
 package io.github.enzankiars.botbattle;
 
-import java.awt.EventQueue;
-import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import java.awt.Color;
-import java.awt.GridLayout;
-
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JSplitPane;
-
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import io.github.enzankiars.botbattle.bot.Bot;
-import io.github.enzankiars.botbattle.bot.demo.DemoBot;
-import io.github.enzankiars.botbattle.util.JythonObjectFactory;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -32,6 +17,20 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+
+import io.github.enzankiars.botbattle.bot.Bot;
+import io.github.enzankiars.botbattle.bot.demo.DemoBot;
+import io.github.enzankiars.botbattle.util.JythonObjectFactory;
+import javafx.scene.canvas.GraphicsContext;
 
 public class MainWindow {
 
@@ -80,16 +79,20 @@ public class MainWindow {
 	private static void runBots() {
 		//System.out.println(":)");
 		frame++;
-		canvas.repaint();
+		
+		Graphics g = canvas.getGraphics();
+		canvas.setIgnoreRepaint(true);
 		synchronized (bots) {
 			Iterator<Bot> j = bots.iterator(); // Must be in synchronized block
 			while (j.hasNext()) {
 				Bot n = j.next();
 				n.run();
+				n.drawFullImage(g);
 				n.updateBotStatusWindow();
 				//System.out.println("[MainThread] " + n.getRotation());
 			}
 		}
+		//canvas.repaint();
 		lblTimeValue.setText(String.valueOf(frame));
 	}
 
@@ -113,6 +116,7 @@ public class MainWindow {
 	    
 	    bots.add(pyBot);
 	    setSidePanel();
+	    canvas.setIgnoreRepaint(true);
 	}
 
 	/**
@@ -125,23 +129,7 @@ public class MainWindow {
 		frmBotbattle.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmBotbattle.getContentPane().setLayout(new BorderLayout(0, 0));
 		
-		canvas = new Canvas() {
-			private static final long serialVersionUID = -1514620282447736707L;
-
-			@Override
-			public void paint(Graphics g) {
-				// TODO Auto-generated method stub
-				super.paint(g);
-				synchronized (bots) {
-					Iterator<Bot> i = bots.iterator(); // Must be in synchronized block
-					while (i.hasNext()) {
-						Bot c = i.next();
-						c.drawFullImage(g);
-						//System.out.println("[DrawThread] " + c.getRotation());
-					}
-				}
-			}
-		};
+		canvas = new Canvas();
 		canvas.setBackground(new Color(85, 107, 47));
 		frmBotbattle.getContentPane().add(canvas, BorderLayout.CENTER);
 		
