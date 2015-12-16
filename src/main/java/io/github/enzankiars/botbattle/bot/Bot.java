@@ -55,14 +55,6 @@ public abstract class Bot {
 			BufferedImage maskBody = TintImage.generateMask(bodyImage, body, 0.5f);
 			bodyImage = TintImage.tint(bodyImage, maskBody);
 		
-			
-//			for (int i = 0; i < bodyImage.getWidth(); i++) {
-//				for (int j = 0; j < bodyImage.getHeight(); j++) {
-//					if (bodyImage.getRGB(i, j) == Color.WHITE.getRGB()){
-//						bodyImage.setRGB(0, 0, Color.BLACK.getRGB());
-//					}
-//				}
-//			}
 			gunImage = ImageIO.read(getClass().getClassLoader().getResource("gun.png"));
 			BufferedImage maskGun = TintImage.generateMask(gunImage, gun, 0.5f);
 			gunImage = TintImage.tint(gunImage, maskGun);
@@ -153,6 +145,10 @@ public abstract class Bot {
 
 	public void updateBotStatusWindow() {
 		botStatusWindow.update();
+	}
+	
+	public void resetBotStatusWindow() {
+		botStatusWindow = new BotStatus(this);
 	}
 	
 	public void forward() {

@@ -6,10 +6,12 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -38,12 +40,13 @@ public class MainWindow {
 		return frmBotbattle;
 	}
 
-	private static Panel sidePanel;
+	private static JPanel sidePanel;
 	private static Canvas canvas;
 	private static List<Bot> bots = Collections.synchronizedList(new ArrayList<Bot>());
 	private static boolean isInGame = false;
 	private static int frame = 0;
 	private static JLabel lblTimeValue;
+	private static BufferedImage gameFieldImage;
 	
 	/**
 	 * Launch the application.
@@ -56,6 +59,7 @@ public class MainWindow {
 					frmBotbattle.setVisible(true);
 					
 					init();
+					redraw();
 					
 				    final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 				    executorService.scheduleAtFixedRate(new Runnable() {
@@ -79,43 +83,58 @@ public class MainWindow {
 		//System.out.println(":)");
 		frame++;
 		
-		Graphics g = canvas.getGraphics();
-		canvas.setIgnoreRepaint(true);
 		synchronized (bots) {
 			Iterator<Bot> j = bots.iterator(); // Must be in synchronized block
 			while (j.hasNext()) {
 				Bot n = j.next();
 				n.run();
-				n.drawFullImage(g);
 				n.updateBotStatusWindow();
-				//System.out.println("[MainThread] " + n.getRotation());
 			}
 		}
-		canvas.repaint();
+		
+		redraw();
 		lblTimeValue.setText(String.valueOf(frame));
 	}
 
-	private static void init() {
-		bots = Collections.synchronizedList(new ArrayList<Bot>());
-		frame=0;
-		
-		bots.add(new Bot(Color.BLACK, Color.CYAN, "TestJavaBot") {
-			@Override
-			public void run() {
-				addBodyRotation(1);
-				//System.out.println(getBodyRotation());
+	private static void redraw() {
+		gameFieldImage = new BufferedImage(getCanvasWidth(), getCanvasHeight(), BufferedImage.TYPE_INT_RGB);
+		Graphics g = gameFieldImage.createGraphics();
+		g.setColor(new Color(85, 107, 47));
+		g.fillRect(0, 0, getCanvasWidth(), getCanvasHeight());
+		canvas.setIgnoreRepaint(true);
+		synchronized (bots) {
+			Iterator<Bot> j = bots.iterator(); // Must be in synchronized block
+			while (j.hasNext()) {
+				Bot n = j.next();
+				n.drawFullImage(g);
 			}
-		});
-		bots.add(new DemoBot(Color.GRAY, Color.GREEN, "DemoBot"));
-		
-		JythonObjectFactory pyBotFactory = new JythonObjectFactory(
-	            Bot.class, "TestBot", "TestBot");
+		}
+		canvas.getGraphics().drawImage(gameFieldImage, 0, 0, null);
+		g.dispose();
+	}
 
-	    Bot pyBot = (Bot) pyBotFactory.createObject(Color.RED, Color.BLUE, "TestPythonBot");
-	    
-	    bots.add(pyBot);
-	    setSidePanel();
-	    canvas.setIgnoreRepaint(true);
+	private static void init() {
+		synchronized (bots) {
+			bots = Collections.synchronizedList(new ArrayList<Bot>());
+			frame=0;
+			
+			bots.add(new Bot(Color.BLACK, Color.CYAN, "TestJavaBot") {
+				@Override
+				public void run() {
+					addBodyRotation(1);
+					//System.out.println(getBodyRotation());
+				}
+			});
+			bots.add(new DemoBot(Color.GRAY, Color.GREEN, "DemoBot"));
+			
+			JythonObjectFactory pyBotFactory = new JythonObjectFactory(
+		            Bot.class, "TestBot", "TestBot");
+	
+		    Bot pyBot = (Bot) pyBotFactory.createObject(Color.RED, Color.BLUE, "TestPythonBot");
+		    
+		    bots.add(pyBot);
+		    setSidePanel();
+		}
 	}
 
 	/**
@@ -132,7 +151,7 @@ public class MainWindow {
 		canvas.setBackground(new Color(85, 107, 47));
 		frmBotbattle.getContentPane().add(canvas, BorderLayout.CENTER);
 		
-		sidePanel = new Panel();
+		sidePanel = new JPanel();
 		frmBotbattle.getContentPane().add(sidePanel, BorderLayout.EAST);
 		sidePanel.setLayout(new GridLayout(16, 0, 0, 0));
 		
@@ -169,7 +188,7 @@ public class MainWindow {
 			public void actionPerformed(ActionEvent e) {
 				isInGame = false;
 				init();
-				canvas.paint(canvas.getGraphics());
+				redraw();
 				frame = 0;
 				lblTimeValue.setText(String.valueOf(frame));
 			}
@@ -203,16 +222,28 @@ public class MainWindow {
 	}
 	
 	public static void setSidePanel() {
-		for (final Bot bot : bots) {
-			JButton button = new JButton(bot.getName());
-			button.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					bot.getBotStatusWindow().setVisible(true);
-				}
-			});
-			sidePanel.add(button);
-			
+		frmBotbattle.remove(sidePanel);
+		
+		sidePanel = new JPanel();
+		frmBotbattle.getContentPane().add(sidePanel, BorderLayout.EAST);
+		sidePanel.setLayout(new GridLayout(16, 0, 0, 0));
+		
+		synchronized (bots) {
+			for (final Bot bot : bots) {
+				bot.resetBotStatusWindow();
+				JButton button = new JButton(bot.getName());
+				button.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						bot.getBotStatusWindow().setVisible(true);
+					}
+				});
+				button.setEnabled(true);
+				sidePanel.add(button);
+				sidePanel.repaint();
+				button.repaint();
+				
+			}
 		}
 	}
 	
